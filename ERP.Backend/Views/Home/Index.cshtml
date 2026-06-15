@@ -1,0 +1,32 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <title>ERP Project Manager</title>
+    <link rel="icon" href="/favicon.ico" />
+    <!-- React build assets are injected here by Vite -->
+    <script>
+        // Inject base URL configuration for the React app
+        window.__BASE_URL__ = '/api';
+    </script>
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this application.</noscript>
+    <div id="root"></div>
+    <!--
+        React SPA entry point.
+        After running `npm run build`, copy the generated assets from
+        the React project's `dist/` folder into this project's `wwwroot/`.
+        Vite generates an index.html that references hashed JS/CSS files.
+        Replace the contents of this file (keeping the Layout = null) with
+        the Vite-generated index.html content, OR configure Vite to output
+        directly to wwwroot.
+    -->
+    <script type="module" src="/assets/index.js"></script>
+</body>
+</html>

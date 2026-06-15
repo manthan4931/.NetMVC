@@ -1,0 +1,38 @@
+## Build output
+bin/
+obj/
+
+## SQLite database
+*.db
+*.db-shm
+*.db-wal
+
+## Secrets / environment
+appsettings.Local.json
+appsettings.Production.json
+*.pfx
+*.key
+
+## VS / Rider
+.vs/
+*.user
+*.suo
+.idea/
+*.DotSettings.user
+
+## Node / React build
+node_modules/
+dist/
+.env
+.env.local
+
+## macOS
+.DS_Store
+
+## Logs
+*.log
+
+## Upload temp files
+wwwroot/uploads/**/*
+!wwwroot/uploads/avatars/.gitkeep
+!wwwroot/uploads/attachments/.gitkeep
