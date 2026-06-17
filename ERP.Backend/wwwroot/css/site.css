@@ -1,22 +1,190 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+/* ─── Base Styles ──────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
 
 body {
-  margin-bottom: 60px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #f8f9ff; /* --color-surface-950 */
+  color: #0f172a; /* Dark slate body text */
+  overflow: hidden;
+  margin: 0;
+  height: 100vh;
+}
+
+/* ─── Light Mode Text Overrides ────────────────────────────────── */
+/* Ensure all text classes that default to light/white render as dark slate,
+   except inside the sidebar, buttons, or badges. */
+
+/* By default, text-white should be dark slate */
+.text-white {
+  color: #0f172a !important;
+}
+
+/* Exceptions: Revert text-white to actual white for dark/primary containers */
+aside .text-white,
+aside .text-white *,
+aside h1,
+aside h2,
+aside h3,
+a.bg-indigo-600,
+a.bg-indigo-700,
+a.bg-primary-500,
+a.bg-primary-650,
+.bg-indigo-600,
+.bg-indigo-700,
+.bg-primary-500,
+.bg-primary-500 *,
+.bg-primary-600,
+.bg-primary-600 *,
+.bg-danger,
+.bg-danger *,
+.bg-success,
+.bg-success *,
+.bg-warning,
+.bg-warning *,
+.bg-gradient-to-br,
+.bg-gradient-to-br *,
+.bg-gradient-to-r,
+.bg-gradient-to-r *,
+.text-white-force {
+  color: #ffffff !important;
+}
+
+/* Ensure all head elements, labels, and table components are dark slate */
+h1, h2, h3, h4, h5, h6, th, td, label {
+  color: #0f172a !important;
+}
+
+/* Make sure placeholders are clear and readable in light mode */
+input::placeholder, textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Make sure text inputs, textareas, and dropdown selects have uniform clean white styling */
+input, select, textarea {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #4f46e5 !important;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15) !important;
+  outline: none !important;
+}
+
+/* Styling for all modal backdrops to look premium and stretch full viewport */
+.fixed.inset-0.bg-black\/60 {
+  background-color: rgba(15, 23, 42, 0.4) !important; /* Premium dark slate overlay */
+  backdrop-filter: blur(8px) !important;                /* Smooth high-end blur */
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* ─── Animations ───────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(99, 102, 241, 0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.3s ease-out forwards;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+/* Stagger children */
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
+
+/* ─── Glass Cards (Light Theme Slate Cards) ─────────────────────── */
+.glass-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.glass-card-hover {
+  transition: all 0.2s ease-in-out;
+}
+.glass-card-hover:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -1px rgba(15, 23, 42, 0.08);
+}
+
+/* ─── Skeleton Loader ──────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.5) 25%,
+    rgba(203, 213, 225, 0.5) 50%,
+    rgba(226, 232, 240, 0.5) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.5rem;
+}
+
+/* ─── Custom Scrollbar (webkit) ────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
 }

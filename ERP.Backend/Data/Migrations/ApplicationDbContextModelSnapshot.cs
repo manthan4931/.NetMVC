@@ -549,7 +549,7 @@ namespace ERP.Backend.Data.Migrations
                     b.HasOne("ERP.Backend.Models.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ERP.Backend.Models.User", "User")
                         .WithMany("ActivityLogs")
@@ -605,12 +605,12 @@ namespace ERP.Backend.Data.Migrations
                     b.HasOne("ERP.Backend.Models.User", "Head")
                         .WithMany()
                         .HasForeignKey("HeadId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ERP.Backend.Models.Department", "Parent")
                         .WithMany("SubDepartments")
                         .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Head");
 
@@ -633,7 +633,7 @@ namespace ERP.Backend.Data.Migrations
                     b.HasOne("ERP.Backend.Models.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedBy");
                 });
@@ -662,7 +662,7 @@ namespace ERP.Backend.Data.Migrations
                     b.HasOne("ERP.Backend.Models.User", "Assignee")
                         .WithMany()
                         .HasForeignKey("AssigneeId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ERP.Backend.Models.Project", "Project")
                         .WithMany("Tasks")
@@ -673,7 +673,7 @@ namespace ERP.Backend.Data.Migrations
                     b.HasOne("ERP.Backend.Models.User", "Reporter")
                         .WithMany()
                         .HasForeignKey("ReporterId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Assignee");
 
@@ -693,7 +693,7 @@ namespace ERP.Backend.Data.Migrations
                     b.HasOne("ERP.Backend.Models.User", "Lead")
                         .WithMany()
                         .HasForeignKey("LeadId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Department");
 
@@ -711,7 +711,7 @@ namespace ERP.Backend.Data.Migrations
                     b.HasOne("ERP.Backend.Models.ProjectTask", "Task")
                         .WithMany("TimeEntries")
                         .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ERP.Backend.Models.User", "User")
                         .WithMany("TimeEntries")
@@ -731,12 +731,12 @@ namespace ERP.Backend.Data.Migrations
                     b.HasOne("ERP.Backend.Models.Department", "Department")
                         .WithMany("Members")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ERP.Backend.Models.Team", "Team")
                         .WithMany("Members")
                         .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Department");
 

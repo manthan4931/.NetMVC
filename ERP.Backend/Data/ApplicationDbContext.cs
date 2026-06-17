@@ -44,35 +44,35 @@ namespace ERP.Backend.Data
                 .HasOne(d => d.Parent)
                 .WithMany(d => d.SubDepartments)
                 .HasForeignKey(d => d.ParentId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Department -> Head (User)
             modelBuilder.Entity<Department>()
                 .HasOne(d => d.Head)
                 .WithMany()
                 .HasForeignKey(d => d.HeadId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // User -> Department
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Department)
                 .WithMany(d => d.Members)
                 .HasForeignKey(u => u.DepartmentId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // User -> Team
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Team)
                 .WithMany(t => t.Members)
                 .HasForeignKey(u => u.TeamId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Team -> Lead (User)
             modelBuilder.Entity<Team>()
                 .HasOne(t => t.Lead)
                 .WithMany()
                 .HasForeignKey(t => t.LeadId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // ProjectMember - unique project+user combo
             modelBuilder.Entity<ProjectMember>()
@@ -83,28 +83,28 @@ namespace ERP.Backend.Data
                 .HasOne(p => p.CreatedBy)
                 .WithMany()
                 .HasForeignKey(p => p.CreatedById)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Task -> Assignee
             modelBuilder.Entity<ProjectTask>()
                 .HasOne(t => t.Assignee)
                 .WithMany()
                 .HasForeignKey(t => t.AssigneeId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Task -> Reporter
             modelBuilder.Entity<ProjectTask>()
                 .HasOne(t => t.Reporter)
                 .WithMany()
                 .HasForeignKey(t => t.ReporterId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // TimeEntry -> Task (optional)
             modelBuilder.Entity<TimeEntry>()
                 .HasOne(te => te.Task)
                 .WithMany(t => t.TimeEntries)
                 .HasForeignKey(te => te.TaskId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // TimeEntry -> User
             modelBuilder.Entity<TimeEntry>()
@@ -118,7 +118,7 @@ namespace ERP.Backend.Data
                 .HasOne(a => a.Project)
                 .WithMany()
                 .HasForeignKey(a => a.ProjectId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Store enums as strings
             modelBuilder.Entity<User>()

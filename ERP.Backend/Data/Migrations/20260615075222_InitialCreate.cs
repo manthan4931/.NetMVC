@@ -85,7 +85,7 @@ namespace ERP.Backend.Data.Migrations
                         column: x => x.ParentId,
                         principalTable: "Departments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -231,13 +231,13 @@ namespace ERP.Backend.Data.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Users_Teams_TeamId",
                         column: x => x.TeamId,
                         principalTable: "Teams",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -272,7 +272,7 @@ namespace ERP.Backend.Data.Migrations
                         column: x => x.TaskId,
                         principalTable: "Tasks",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_TimeEntries_Users_UserId",
                         column: x => x.UserId,
@@ -417,7 +417,7 @@ namespace ERP.Backend.Data.Migrations
                 column: "ProjectId",
                 principalTable: "Projects",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ActivityLogs_Users_UserId",
@@ -465,7 +465,7 @@ namespace ERP.Backend.Data.Migrations
                 column: "HeadId",
                 principalTable: "Users",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Milestones_Projects_ProjectId",
@@ -497,7 +497,7 @@ namespace ERP.Backend.Data.Migrations
                 column: "CreatedById",
                 principalTable: "Users",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Tasks_Users_AssigneeId",
@@ -505,7 +505,7 @@ namespace ERP.Backend.Data.Migrations
                 column: "AssigneeId",
                 principalTable: "Users",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Tasks_Users_ReporterId",
@@ -513,7 +513,7 @@ namespace ERP.Backend.Data.Migrations
                 column: "ReporterId",
                 principalTable: "Users",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Teams_Users_LeadId",
@@ -521,7 +521,7 @@ namespace ERP.Backend.Data.Migrations
                 column: "LeadId",
                 principalTable: "Users",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />

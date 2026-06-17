@@ -1,49 +1,259 @@
-﻿<!DOCTYPE html>
+@using System.Security.Claims
+@{
+    var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+    var firstName = isAuthenticated ? (User.FindFirst("firstName")?.Value ?? "") : "Jane";
+    var lastName = isAuthenticated ? (User.FindFirst("lastName")?.Value ?? "") : "Doe";
+    var userEmail = isAuthenticated ? (User.FindFirst(ClaimTypes.Email)?.Value ?? "") : "admin@erp.com";
+    var userRole = isAuthenticated ? (User.FindFirst(ClaimTypes.Role)?.Value ?? "") : "ADMIN";
+    var userInitial = firstName.Length > 0 ? firstName[0].ToString() : "J";
+    var userLastInitial = lastName.Length > 0 ? lastName[0].ToString() : "D";
+    var userFullName = $"{firstName} {lastName}";
+
+    // Check active path for styling the navigation links
+    var currentPath = Context.Request.Path.Value ?? "";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ERP.Backend</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - ERP Project Manager</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe', 300: '#c084fc',
+                            400: '#818cf8', 500: '#4f46e5', 600: '#4338ca', 700: '#3730a3',
+                            800: '#312e81', 900: '#1e1b4b'
+                        },
+                        surface: {
+                            50: '#64748b', 100: '#475569', 200: '#0f172a', 700: '#e2e8f0',
+                            800: '#f1f5f9', 850: '#f8fafc', 900: '#ffffff', 950: '#f8f9ff'
+                        },
+                        accent: '#0ea5e9',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Global CSS Overrides -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ERP.Backend.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ERP.Backend</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+<body class="bg-surface-950 font-sans">
+
+    <div class="flex h-screen overflow-hidden relative bg-[#f8f9ff]">
+        <!-- Aurora Ambient Glows -->
+        <div class="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-500/5 blur-[120px] pointer-events-none z-0"></div>
+        <div class="absolute bottom-[-15%] left-[15%] w-[600px] h-[600px] rounded-full bg-sky-500/3 blur-[140px] pointer-events-none z-0"></div>
+        
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed left-0 top-0 h-screen w-64 bg-[#0f172a] border-r border-[#1e293b] flex flex-col z-50 transition-transform duration-300 ease-in-out translate-x-0">
+            <!-- Logo -->
+            <div class="h-16 flex items-center justify-between px-6 border-b border-[#1e293b]">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-accent flex items-center justify-center flex-shrink-0">
+                        <span class="text-white font-bold text-lg">E</span>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-white tracking-tight">ERP</h1>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest -mt-1">Project Manager</p>
+                    </div>
+                </div>
+
+                <!-- Collapse Button -->
+                <button onclick="toggleSidebar()" class="p-1.5 rounded-lg text-slate-400 hover:bg-[#1e293b] hover:text-slate-200 transition-colors focus:outline-none" title="Collapse Sidebar">
+                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+                <a href="/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group @(currentPath == "/" ? "bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5" : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200")">
+                    <i data-lucide="layout-grid" class="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"></i>
+                    <span>Dashboard</span>
+                    @if (currentPath == "/") { <div class="ml-auto w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div> }
+                </a>
+
+                <a href="/Projects" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group @(currentPath.StartsWith("/Projects", StringComparison.OrdinalIgnoreCase) ? "bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5" : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200")">
+                    <i data-lucide="folder" class="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"></i>
+                    <span>Projects</span>
+                    @if (currentPath.StartsWith("/Projects", StringComparison.OrdinalIgnoreCase)) { <div class="ml-auto w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div> }
+                </a>
+
+                <a href="/Tasks" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group @(currentPath.StartsWith("/Tasks", StringComparison.OrdinalIgnoreCase) ? "bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5" : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200")">
+                    <i data-lucide="clipboard-list" class="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"></i>
+                    <span>Tasks</span>
+                    @if (currentPath.StartsWith("/Tasks", StringComparison.OrdinalIgnoreCase)) { <div class="ml-auto w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div> }
+                </a>
+
+                @if (userRole == "ADMIN")
+                {
+                    <a href="/Employees" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group @(currentPath.StartsWith("/Employees", StringComparison.OrdinalIgnoreCase) ? "bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5" : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200")">
+                        <i data-lucide="users" class="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"></i>
+                        <span>Employees</span>
+                        @if (currentPath.StartsWith("/Employees", StringComparison.OrdinalIgnoreCase)) { <div class="ml-auto w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div> }
+                    </a>
+                }
+                else
+                {
+                    <a href="/Employees/Detail" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group @(currentPath.StartsWith("/Employees/Detail", StringComparison.OrdinalIgnoreCase) ? "bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5" : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200")">
+                        <i data-lucide="users" class="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"></i>
+                        <span>Profile</span>
+                        @if (currentPath.StartsWith("/Employees/Detail", StringComparison.OrdinalIgnoreCase)) { <div class="ml-auto w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div> }
+                    </a>
+                }
+
+                @if (userRole == "ADMIN" || userRole == "PROJECT_MANAGER")
+                {
+                    <a href="/Departments" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group @(currentPath.StartsWith("/Departments", StringComparison.OrdinalIgnoreCase) ? "bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5" : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200")">
+                        <i data-lucide="building" class="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"></i>
+                        <span>Departments</span>
+                        @if (currentPath.StartsWith("/Departments", StringComparison.OrdinalIgnoreCase)) { <div class="ml-auto w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div> }
+                    </a>
+                }
+
+                <a href="/TimeTracking" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group @(currentPath.StartsWith("/TimeTracking", StringComparison.OrdinalIgnoreCase) ? "bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5" : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200")">
+                    <i data-lucide="clock" class="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"></i>
+                    <span>Time Tracking</span>
+                    @if (currentPath.StartsWith("/TimeTracking", StringComparison.OrdinalIgnoreCase)) { <div class="ml-auto w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div> }
+                </a>
+
+                @if (userRole == "ADMIN" || userRole == "PROJECT_MANAGER" || userRole == "TEAM_LEAD")
+                {
+                    <a href="/Reports" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group @(currentPath.StartsWith("/Reports", StringComparison.OrdinalIgnoreCase) ? "bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5" : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200")">
+                        <i data-lucide="bar-chart-3" class="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"></i>
+                        <span>Reports</span>
+                        @if (currentPath.StartsWith("/Reports", StringComparison.OrdinalIgnoreCase)) { <div class="ml-auto w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div> }
+                    </a>
+
+                    <a href="/Today" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group @(currentPath.StartsWith("/Today", StringComparison.OrdinalIgnoreCase) ? "bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5" : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200")">
+                        <i data-lucide="sun" class="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"></i>
+                        <span>Today</span>
+                        @if (currentPath.StartsWith("/Today", StringComparison.OrdinalIgnoreCase)) { <div class="ml-auto w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div> }
+                    </a>
+                }
+
+                <a href="/Settings" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group @(currentPath.StartsWith("/Settings", StringComparison.OrdinalIgnoreCase) ? "bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5" : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200")">
+                    <i data-lucide="settings" class="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"></i>
+                    <span>Settings</span>
+                    @if (currentPath.StartsWith("/Settings", StringComparison.OrdinalIgnoreCase)) { <div class="ml-auto w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div> }
+                </a>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="p-4 border-t border-[#1e293b]">
+                <div class="bg-[#1e293b]/50 border border-[#334155]/30 p-3 rounded-xl">
+                    <p class="text-xs text-slate-400">Version 1.0.0</p>
+                    <p class="text-[10px] text-slate-500 mt-0.5">Phase 1 + 2</p>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div id="main-content" class="flex-1 flex flex-col h-screen relative z-10 bg-transparent transition-all duration-300 ease-in-out ml-64">
+            
+            <!-- Topbar -->
+            <header class="h-16 bg-white/80 backdrop-blur-xl border-b border-surface-800 flex items-center justify-between px-6 sticky top-0 z-40">
+                <!-- Left: Collapse toggle & Search -->
+                <div class="flex items-center gap-4">
+                    <button id="expand-sidebar-btn" onclick="toggleSidebar()" class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition-colors focus:outline-none hidden" title="Expand Sidebar">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Search Bar -->
+                    <div class="relative w-80 md:w-96">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                        <input type="text" placeholder="Search projects, tasks, people..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/30 transition-all" />
+                        <kbd class="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] text-slate-400 bg-slate-100 border border-slate-200 rounded">⌘K</kbd>
+                    </div>
+                </div>
+
+                <!-- Right: Notifications, Stopwatch, Profile -->
+                <div class="flex items-center gap-4">
+                    
+                    <!-- Notifications Button -->
+                    <button class="relative p-2 rounded-xl hover:bg-slate-100 transition-colors group">
+                        <i data-lucide="bell" class="w-5 h-5 text-slate-500 group-hover:text-slate-800 transition-colors"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger animate-pulse"></span>
+                    </button>
+
+                    <!-- User Profile Dropdown -->
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-sm font-semibold">
+                            @userInitial@userLastInitial
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-slate-800">@userFullName</p>
+                            <p class="text-xs text-slate-500">@userRole.Replace("_", " ")</p>
+                        </div>
+                        <a href="/api/auth/logout" class="p-2 rounded-xl hover:bg-danger/10 transition-colors group" title="Logout">
+                            <i data-lucide="log-out" class="w-4 h-4 text-slate-400 group-hover:text-danger transition-colors"></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Render Area -->
+            <main class="flex-1 overflow-y-auto p-6">
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - ERP.Backend - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            lucide.createIcons();
+        });
+    </script>
+
+    <!-- Sidebar Toggler Script -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const mainContent = document.getElementById("main-content");
+            const expandBtn = document.getElementById("expand-sidebar-btn");
+            
+            const isCollapsed = sidebar.classList.contains("-translate-x-full");
+            if (isCollapsed) {
+                sidebar.classList.remove("-translate-x-full");
+                sidebar.classList.add("translate-x-0");
+                mainContent.classList.remove("ml-0");
+                mainContent.classList.add("ml-64");
+                if (expandBtn) expandBtn.classList.add("hidden");
+            } else {
+                sidebar.classList.remove("translate-x-0");
+                sidebar.classList.add("-translate-x-full");
+                mainContent.classList.remove("ml-64");
+                mainContent.classList.add("ml-0");
+                if (expandBtn) expandBtn.classList.remove("hidden");
+            }
+        }
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
